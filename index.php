@@ -179,6 +179,10 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
             <a href="?page=bookings" class="<?= $page == 'bookings' ? 'active' : '' ?>">
                 <i class="fas fa-calendar-check"></i> Booking
             </a>
+            <!-- Kalender Booking -->
+            <a href="modules/bookings/calendar.php" target="_blank" style="padding-left: 45px; font-size: 13px; opacity: 0.85;">
+    <i class="fas fa-calendar-alt me-2"></i>Kalender Booking
+</a>
             <a href="?page=payments" class="<?= $page == 'payments' ? 'active' : '' ?>">
                 <i class="fas fa-money-bill-wave"></i> Pembayaran
             </a>
@@ -196,22 +200,30 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
 
     <!-- Main Content -->
     <div class="main-content">
-        <!-- Topbar -->
-        <div class="topbar">
-            <button class="btn btn-sm btn-outline-secondary d-md-none" onclick="toggleSidebar()">
-                <i class="fas fa-bars"></i>
-            </button>
-            <h4 class="mb-0"><?= ucfirst($page) ?></h4>
-            <div class="d-flex align-items-center">
-                <div class="me-3">
-                    <i class="fas fa-user-circle fa-2x"></i>
-                </div>
-                <div>
-                    <div class="fw-bold"><?= $_SESSION['full_name'] ?></div>
-                    <small class="text-muted"><?= ucfirst($_SESSION['role']) ?></small>
-                </div>
-            </div>
+<!-- Topbar -->
+<div class="topbar">
+    <button class="btn btn-sm btn-outline-secondary d-md-none" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+    <h4 class="mb-0"><?= ucfirst($page) ?></h4>
+    
+    <div class="d-flex align-items-center">
+        <div class="me-3">
+            <i class="fas fa-user-circle fa-2x"></i>
         </div>
+        <div>
+            <?php 
+            // Ambil data dari session dengan nilai default jika kosong
+            $fullName = $_SESSION['full_name'] ?? 'Pengguna'; 
+            $role = $_SESSION['role'] ?? 'guest';
+                    $displayRole = ($role == 'admin') ? 'Admin' : ucfirst($role);
+
+            ?>
+            <div class="fw-bold"><?= htmlspecialchars($fullName) ?></div>
+            <small class="text-muted"><?= ucfirst($role) ?></small>
+        </div>
+    </div>
+</div>
 
         <!-- Alert -->
         <?php $alert = getAlert(); if ($alert): ?>

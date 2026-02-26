@@ -13,11 +13,13 @@ if ($action == 'save' && $_SERVER['REQUEST_METHOD'] == 'POST') {
     $facilities = sanitize($_POST['facilities']);
     
     if ($id) {
+        // Update existing room
         $query = "UPDATE rooms SET room_number='$room_number', room_name='$room_name', type='$type', 
-                  price='$price', status='$status', description='$description', facilities='$facilities' 
+                  price='$price', status='$status', description='$description', facilities='$facilities'
                   WHERE id=$id";
         showAlert('Data kamar berhasil diupdate!');
     } else {
+        // Insert new room
         $query = "INSERT INTO rooms (room_number, room_name, type, price, status, description, facilities) 
                   VALUES ('$room_number', '$room_name', '$type', '$price', '$status', '$description', '$facilities')";
         showAlert('Data kamar berhasil ditambahkan!');
@@ -64,12 +66,12 @@ if ($action == 'edit' && isset($_GET['id'])) {
             
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">Nomor Kamar</label>
+                    <label class="form-label">Nomor Kamar <span class="text-danger">*</span></label>
                     <input type="text" name="room_number" class="form-control" 
                            value="<?= $edit_data['room_number'] ?? '' ?>" required>
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">Nama Kamar</label>
+                    <label class="form-label">Nama Kamar <span class="text-danger">*</span></label>
                     <input type="text" name="room_name" class="form-control" 
                            value="<?= $edit_data['room_name'] ?? '' ?>" required>
                 </div>
@@ -77,7 +79,7 @@ if ($action == 'edit' && isset($_GET['id'])) {
             
             <div class="row">
                 <div class="col-md-4 mb-3">
-                    <label class="form-label">Tipe</label>
+                    <label class="form-label">Tipe <span class="text-danger">*</span></label>
                     <select name="type" class="form-select" required>
                         <option value="Single" <?= ($edit_data['type'] ?? '') == 'Single' ? 'selected' : '' ?>>Single</option>
                         <option value="Double" <?= ($edit_data['type'] ?? '') == 'Double' ? 'selected' : '' ?>>Double</option>
@@ -85,12 +87,12 @@ if ($action == 'edit' && isset($_GET['id'])) {
                     </select>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label class="form-label">Harga per Bulan (Rp)</label>
+                    <label class="form-label">Harga per Bulan (Rp) <span class="text-danger">*</span></label>
                     <input type="number" name="price" class="form-control" 
                            value="<?= $edit_data['price'] ?? '' ?>" required>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label class="form-label">Status</label>
+                    <label class="form-label">Status <span class="text-danger">*</span></label>
                     <select name="status" class="form-select" required>
                         <option value="Available" <?= ($edit_data['status'] ?? '') == 'Available' ? 'selected' : '' ?>>Tersedia</option>
                         <option value="Occupied" <?= ($edit_data['status'] ?? '') == 'Occupied' ? 'selected' : '' ?>>Terisi</option>

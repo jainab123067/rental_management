@@ -50,7 +50,6 @@ if ($action == 'edit' && isset($_GET['id'])) {
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h4 class="mb-0"><i class="fas fa-money-bill-wave me-2"></i> Data Pembayaran</h4>
         
-        <!-- PERBAIKAN 1: Tombol untuk form DAN edit -->
         <?php if ($action != 'form' && $action != 'edit'): ?>
             <a href="?page=payments&action=form" class="btn btn-primary">
                 <i class="fas fa-plus"></i> Tambah Pembayaran
@@ -62,7 +61,6 @@ if ($action == 'edit' && isset($_GET['id'])) {
         <?php endif; ?>
     </div>
 
-    <!-- PERBAIKAN 2: Tampilkan form untuk action form ATAU edit -->
     <?php if ($action == 'form' || $action == 'edit'): ?>
         <form method="POST" action="?page=payments&action=save">
             <?php if ($edit_data): ?>
@@ -164,7 +162,8 @@ if ($action == 'edit' && isset($_GET['id'])) {
                 </thead>
                 <tbody>
                     <?php
-                    $payments = mysqli_query($conn, "SELECT p.*, t.full_name, r.room_number 
+                    // ✅ PERBAIKAN: Tambahkan phone dari tenants table
+                    $payments = mysqli_query($conn, "SELECT p.*, t.full_name, t.phone, r.room_number 
                         FROM payments p 
                         JOIN bookings b ON p.booking_id = b.id 
                         JOIN tenants t ON b.tenant_id = t.id 
@@ -184,12 +183,28 @@ if ($action == 'edit' && isset($_GET['id'])) {
                         <td><?= $payment['payment_method'] ?></td>
                         <td><span class="badge bg-<?= $badgeClass ?>"><?= $payment['status'] ?></span></td>
                         <td>
-                            <a href="?page=payments&action=edit&id=<?= $payment['id'] ?>" class="btn btn-sm btn-warning">
+                            <!-- Edit Button -->
+                            <a href="?page=payments&action=edit&id=<?= $payment['id'] ?>" 
+                               class="btn btn-sm btn-warning" 
+                               title="Edit">
                                 <i class="fas fa-edit"></i>
                             </a>
+                            
+                            <!-- WhatsApp Button (dengan phone yang benar) -->
+                            <?php if (!empty($payment['phone'])): ?>
+                            <a href="https://wa.me/<?= preg_replace('/[^0-9]/', '', $payment['phone']) ?>?text=<?= urlencode('Halo ' . $payment['full_name'] . ', pembayaran Anda sebesar Rp ' . number_format($payment['amount'], 0, ',', '.') . ' sudah kami terima. Terima kasih!') ?>" 
+                               target="_blank" 
+                               class="btn btn-sm btn-success" 
+                               title="Kirim WhatsApp">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
+                            <?php endif; ?>
+                            
+                            <!-- Delete Button -->
                             <a href="?page=payments&action=delete&id=<?= $payment['id'] ?>" 
                                class="btn btn-sm btn-danger" 
-                               onclick="return confirm('Yakin ingin menghapus?')">
+                               onclick="return confirm('Yakin ingin menghapus?')"
+                               title="Hapus">
                                 <i class="fas fa-trash"></i>
                             </a>
                         </td>
